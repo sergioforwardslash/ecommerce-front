@@ -1,16 +1,41 @@
-import {model, models, Schema} from "mongoose";
+const sequelize = require("@/lib/dbConnection");
+import { DataTypes } from "sequelize";
 
-const OrderSchema = new Schema({
-  line_items:Object,
-  name:String,
-  email:String,
-  city:String,
-  postalCode:String,
-  streetAddress:String,
-  country:String,
-  paid:Boolean,
-}, {
-  timestamps: true,
-});
+const Order = sequelize.define(
+  "Order",
+  {
+    line_items: {
+      type: DataTypes.JSON,
+      allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    postalCode: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    paid: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-export const Order = models?.Order || model('Order', OrderSchema);
+module.exports = Order;

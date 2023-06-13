@@ -1,14 +1,43 @@
-import mongoose, {model, Schema, models} from "mongoose";
+import sequelize from "@/lib/dbConnection";
+import { DataTypes } from "sequelize";
+import Category from "./Category";
 
-const ProductSchema = new Schema({
-  title: {type:String, required:true},
-  description: String,
-  price: {type: Number, required: true},
-  images: [{type:String}],
-  category: {type:mongoose.Types.ObjectId, ref:'Category'},
-  properties: {type:Object},
-}, {
-  timestamps: true,
-});
+const Product = sequelize.define(
+  "Product",
+  {
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    images: {
+      type: DataTypes.JSON,
+      allowNull: false,
+    },
+    categoryId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Category",
+        key: "id",
+      },
+    },
+    properties: {
+      type: DataTypes.JSON,
+      allowNull: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-export const Product = models.Product || model('Product', ProductSchema);
+Product.belongsTo(Category, { foreignKey: "categoryId" });
+
+module.exports = Product;

@@ -1,8 +1,11 @@
-import {mongooseConnect} from "@/lib/mongoose";
-import {Product} from "@/models/Product";
+import Product from "@models/Product";
 
-export default async function handle(req,res) {
-  await mongooseConnect();
+export default async function handle(req, res) {
   const ids = req.body.ids;
-  res.json(await Product.find({_id:ids}));
+  const products = await Product.findAll({
+    where: {
+      id: ids,
+    },
+  });
+  res.json(products.map((product) => product.toJSON()));
 }

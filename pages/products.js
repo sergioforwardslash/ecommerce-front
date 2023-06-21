@@ -21,7 +21,12 @@ export async function getServerSideProps() {
   const products = await Product.findAll({ order: [["id", "DESC"]] });
   return {
     props: {
-      products: products.map((product) => product.toJSON()),
+      products: products.map((product) => {
+        const productJson = product.toJSON();
+        productJson.createdAt = productJson.createdAt.toISOString();
+        productJson.updatedAt = productJson.updatedAt.toISOString();
+        return productJson;
+      }),
     },
   };
 }

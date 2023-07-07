@@ -1,14 +1,13 @@
 import Center from "@/components/Center";
 import Header from "@/components/Header";
 import Title from "@/components/Title";
-import { Product } from "@/models/Product";
+import Product from "@/models/Product";
 import styled from "styled-components";
 import WhiteBox from "@/components/WhiteBox";
 import ProductImages from "@/components/ProductImages";
-import Button from "@/components/Button";
 import CartIcon from "@/components/icons/CartIcon";
-import { useContext } from "react";
-import { CartContext } from "@/components/CartContext";
+import FlyingButton from "@/components/FlyingButton";
+import ProductReviews from "@/components/ProductReviews";
 
 const ColWrapper = styled.div`
   display: grid;
@@ -29,7 +28,6 @@ const Price = styled.span`
 `;
 
 export default function ProductPage({ product }) {
-  const { addProduct } = useContext(CartContext);
   return (
     <>
       <Header />
@@ -46,14 +44,15 @@ export default function ProductPage({ product }) {
                 <Price>${product.price}</Price>
               </div>
               <div>
-                <Button primary onClick={() => addProduct(product.id)}>
+                <FlyingButton main id={product.id} src={product.images?.[0]}>
                   <CartIcon />
                   Add to cart
-                </Button>
+                </FlyingButton>
               </div>
             </PriceRow>
           </div>
         </ColWrapper>
+        <ProductReviews product={product} />
       </Center>
     </>
   );
@@ -62,10 +61,12 @@ export default function ProductPage({ product }) {
 export async function getServerSideProps(context) {
   const { id } = context.query;
   const product = await Product.findOne({ where: { id: id } });
+
+  const plainProduct = product.get({ plain: true });
+
   return {
     props: {
-      product: product.toJSON(),
+      product: plainProduct,
     },
   };
 }
-F;

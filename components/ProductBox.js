@@ -1,12 +1,21 @@
 import styled from "styled-components";
-import Button from "@/components/Button";
+import Button, { ButtonStyle } from "@/components/Button";
 import CartIcon from "@/components/icons/CartIcon";
 import Link from "next/link";
-import {useContext} from "react";
-import {CartContext} from "@/components/CartContext";
+import { useContext, useEffect, useState } from "react";
+import { CartContext } from "@/components/CartContext";
+import { primary } from "@/lib/colors";
+import FlyingButton from "@/components/FlyingButton";
+import HeartOutlineIcon from "@/components/icons/HeartOutlineIcon";
+import HeartSolidIcon from "@/components/icons/HeartSolidIcon";
+import axios from "axios";
 
 const ProductWrapper = styled.div`
-  
+  button {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
 `;
 
 const WhiteBox = styled(Link)`
@@ -18,7 +27,8 @@ const WhiteBox = styled(Link)`
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  img{
+  position: relative;
+  img {
     max-width: 100%;
     max-height: 80px;
   }
@@ -26,10 +36,10 @@ const WhiteBox = styled(Link)`
 
 const Title = styled(Link)`
   font-weight: normal;
-  font-size:.9rem;
-  color:inherit;
-  text-decoration:none;
-  margin:0;
+  font-size: 0.9rem;
+  color: inherit;
+  text-decoration: none;
+  margin: 0;
 `;
 
 const ProductInfoBox = styled.div`
@@ -43,40 +53,86 @@ const PriceRow = styled.div`
     gap: 5px;
   }
   align-items: center;
-  justify-content:space-between;
-  margin-top:2px;
+  justify-content: space-between;
+  margin-top: 2px;
 `;
 
 const Price = styled.div`
   font-size: 1rem;
-  font-weight:400;
+  font-weight: 400;
   text-align: right;
   @media screen and (min-width: 768px) {
     font-size: 1.2rem;
-    font-weight:600;
+    font-weight: 600;
     text-align: left;
   }
 `;
 
-export default function ProductBox({id,title,description,price,images}) {
-  const {addProduct} = useContext(CartContext);
-  const url = '/product/'+id;
+const WishlistButton = styled.button`
+  border: 0;
+  width: 40px !important;
+  height: 40px;
+  padding: 10px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: transparent;
+  cursor: pointer;
+  ${(props) =>
+    props.wished
+      ? `
+    color:red;
+  `
+      : `
+    color:black;
+  `}
+  svg {
+    width: 16px;
+  }
+`;
+
+export default function ProductBox({
+  id,
+  title,
+  description,
+  price,
+  images,
+  wished = false,
+  onRemoveFromWishlist = () => {},
+}) {
+  const url = "/product/" + id;
+  const [isWished, setIsWished] = useState(wished);
+  function addToWishlist(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const nextValue = !isWished;
+    if (nextValue === false && onRemoveFromWishlist) {
+      onRemoveFromWishlist(id);
+    }
+    axios
+      .post("/api/wishlist", {
+        product: id,
+      })
+      .then(() => {});
+    setIsWished(nextValue);
+  }
   return (
     <ProductWrapper>
       <WhiteBox href={url}>
         <div>
-          <img src={images?.[0]} alt=""/>
+          <WishlistButton wished={isWished} onClick={addToWishlist}>
+            {isWished ? <HeartSolidIcon /> : <HeartOutlineIcon />}
+          </WishlistButton>
+          <img src={images?.[0]} alt="" />
         </div>
       </WhiteBox>
       <ProductInfoBox>
         <Title href={url}>{title}</Title>
         <PriceRow>
-          <Price>
-            ${price}
-          </Price>
-          <Button block onClick={() => addProduct(id)} primary outline>
+          <Price>${price}</Price>
+          <FlyingButton id={id} src={images?.[0]}>
             Add to cart
-          </Button>
+          </FlyingButton>
         </PriceRow>
       </ProductInfoBox>
     </ProductWrapper>

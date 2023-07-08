@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Center from "@/components/Center";
 import Button from "@/components/Button";
 import { useContext, useEffect, useState } from "react";
-import CartContext from "@/components/CartContext";
+import { CartContext } from "@/components/CartContext";
 import axios from "axios";
 import Table from "@/components/Table";
 import Input from "@/components/Input";
@@ -97,6 +97,7 @@ export default function CartPage() {
   const [postalCode, setPostalCode] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
   const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [shippingFee, setShippingFee] = useState(null);
   useEffect(() => {
@@ -125,12 +126,15 @@ export default function CartPage() {
       return;
     }
     axios.get("/api/address").then((response) => {
-      setName(response.data.name);
-      setEmail(response.data.email);
-      setCity(response.data.city);
-      setPostalCode(response.data.postalCode);
-      setStreetAddress(response.data.streetAddress);
-      setCountry(response.data.country);
+      if (response.data) {
+        setName(response.data.name || "");
+        setEmail(response.data.email || "");
+        setCity(response.data.city || "");
+        setPostalCode(response.data.postalCode || "");
+        setStreetAddress(response.data.streetAddress || "");
+        setState(response.data.state || "");
+        setCountry(response.data.country || "");
+      }
     });
   }, [session]);
   function moreOfThisProduct(id) {
@@ -146,6 +150,7 @@ export default function CartPage() {
       city,
       postalCode,
       streetAddress,
+      state,
       country,
       cartProducts,
     });
@@ -279,6 +284,13 @@ export default function CartPage() {
                   value={streetAddress}
                   name="streetAddress"
                   onChange={(ev) => setStreetAddress(ev.target.value)}
+                />
+                <Input
+                  type="text"
+                  placeholder="State"
+                  value={state}
+                  name="state"
+                  onChange={(ev) => setCountry(ev.target.value)}
                 />
                 <Input
                   type="text"

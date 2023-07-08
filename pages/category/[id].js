@@ -41,7 +41,7 @@ export default function CategoryPage({
   subCategories,
   products: originalProducts,
 }) {
-  const defaultSorting = "_id-desc";
+  const defaultSorting = "id-desc";
   const defaultFilterValues = category.properties.map((p) => ({
     name: p.name,
     value: "all",
@@ -66,9 +66,9 @@ export default function CategoryPage({
       return;
     }
     setLoadingProducts(true);
-    const catIds = [category._id, ...(subCategories?.map((c) => c._id) || [])];
+    const catIds = [category.id, ...(subCategories?.map((c) => c.id) || [])];
     const params = new URLSearchParams();
-    params.set("categories", catIds.join(","));
+    params.set("categoryId", catIds.join(","));
     params.set("sort", sort);
     filtersValues.forEach((f) => {
       if (f.value !== "all") {
@@ -76,6 +76,7 @@ export default function CategoryPage({
       }
     });
     const url = `/api/products?` + params.toString();
+    console.log(params.toString())
     axios.get(url).then((res) => {
       setProducts(res.data);
       setLoadingProducts(false);
@@ -117,8 +118,8 @@ export default function CategoryPage({
               >
                 <option value="price-asc">price, lowest first</option>
                 <option value="price-desc">price, highest first</option>
-                <option value="_id-desc">newest first</option>
-                <option value="_id-asc">oldest first</option>
+                <option value="id-desc">newest first</option>
+                <option value="id-asc">oldest first</option>
               </select>
             </Filter>
           </FiltersWrapper>
@@ -138,15 +139,23 @@ export default function CategoryPage({
 export async function getServerSideProps(context) {
   const category = await Category.findOne({ where: { id: context.query.id } });
   const subCategories = await Category.findAll({
-    where: { parent: category.id },
+    where: { parentId: category.id },
   });
   const catIds = [category.id, ...subCategories.map((c) => c.id)];
   const products = await Product.findAll({ where: { categoryId: catIds } });
 
   // Convert Sequelize instances to plain JavaScript objects
-  const plainCategory = category.get({ plain: true });
+  const plainCategory = {
+    ...category.get({ plain: true }),
+    createdAt: category.createdAt.toISOString(),
+    updatedAt: category.updatedAt.toISOString(),
+  };
   const plainSubCategories = subCategories.map((sc) => sc.get({ plain: true }));
-  const plainProducts = products.map((p) => p.get({ plain: true }));
+  const plainProducts = products.map((p) => ({
+    ...p.get({ plain: true }),
+    createdAt: p.createdAt.toISOString(),
+    updatedAt: p.updatedAt.toISOString(),
+  }));
 
   return {
     props: {

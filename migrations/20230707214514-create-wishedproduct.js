@@ -6,13 +6,13 @@ module.exports = {
     await queryInterface.createTable("WishedProducts", {
       id: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
         autoIncrement: true,
-        allowNull: false,
+        primaryKey: true,
       },
       userEmail: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
       productId: {
         type: Sequelize.INTEGER,

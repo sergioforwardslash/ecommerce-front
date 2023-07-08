@@ -80,8 +80,8 @@ export default function Featured({ product }) {
             <div>
               <RevealWrapper origin={"left"} delay={0}>
                 <ContentWrapper>
-                  <Title>{product.title}</Title>
-                  <Desc>{product.description}</Desc>
+                  <Title>{product && product.title}</Title>
+                  <Desc>{product && product.description}</Desc>
                   <ButtonsWrapper>
                     <ButtonLink
                       href={"/product/" + product.id}

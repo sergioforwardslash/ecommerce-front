@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { ButtonStyle } from "@/components/Button";
 import { primary } from "@/lib/colors";
 import { CartContext } from "@/components/CartContext";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 
 const FlyingButtonWrapper = styled.div`
   button {
@@ -48,7 +48,7 @@ const FlyingButtonWrapper = styled.div`
   }
 `;
 
-export default function FlyingButton(props) {
+export default function FlyingButton({ main, white, id, src, ...props }) {
   const { addProduct } = useContext(CartContext);
   const imgRef = useRef();
   function sendImageToCart(ev) {
@@ -73,11 +73,11 @@ export default function FlyingButton(props) {
   return (
     <>
       <FlyingButtonWrapper
-        white={props.white}
-        main={props.main}
-        onClick={() => addProduct(props.id)}
+        white={white}
+        main={main}
+        onClick={() => addProduct(id)}
       >
-        <img src={props.src} alt="" ref={imgRef} />
+        <img src={src} alt="" ref={imgRef} />
         <button onClick={(ev) => sendImageToCart(ev)} {...props} />
       </FlyingButtonWrapper>
     </>

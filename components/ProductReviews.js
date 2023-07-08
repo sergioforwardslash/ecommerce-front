@@ -111,7 +111,7 @@ export default function ProductReviews({ product }) {
             {reviews.length === 0 && <p>No reviews :(</p>}
             {reviews.length > 0 &&
               reviews.map((review) => (
-                <ReviewWrapper>
+                <ReviewWrapper key={review.id}>
                   <ReviewHeader>
                     <StarsRating
                       size={"sm"}
@@ -119,7 +119,7 @@ export default function ProductReviews({ product }) {
                       defaultHowMany={review.stars}
                     />
                     <time>
-                      {new Date(review.createdAt).toLocaleString("sv-SE")}
+                      {new Date(review.createdAt).toLocaleString("en-US")}
                     </time>
                   </ReviewHeader>
                   <h3>{review.title}</h3>

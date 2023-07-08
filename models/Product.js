@@ -3,7 +3,7 @@ import { DataTypes } from "sequelize";
 import Category from "./Category";
 
 const Product = sequelize.define(
-  "Product",
+  "Products",
   {
     title: {
       type: DataTypes.STRING,
@@ -24,7 +24,7 @@ const Product = sequelize.define(
     categoryId: {
       type: DataTypes.INTEGER,
       references: {
-        model: "Category",
+        model: "Categories",
         key: "id",
       },
     },
@@ -34,10 +34,11 @@ const Product = sequelize.define(
     },
   },
   {
+    tableName: "Products",
     timestamps: true,
   }
 );
 
-Product.belongsTo(Category, { foreignKey: "categoryId" });
+Product.belongsTo(Category, { foreignKey: "categoryId", as: "category" });
 
 module.exports = Product;

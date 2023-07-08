@@ -66,7 +66,11 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      product: plainProduct,
+      product: {
+        ...plainProduct,
+        createdAt: product.createdAt.toISOString(),
+        updatedAt: product.updatedAt.toISOString(),
+      }
     },
   };
 }

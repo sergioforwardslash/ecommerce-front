@@ -2,16 +2,16 @@ import sequelize from "@/lib/dbConnection";
 import { DataTypes } from "sequelize";
 
 const Category = sequelize.define(
-  "Category",
+  "Categories",
   {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    parntId: {
+    parentId: {
       type: DataTypes.INTEGER,
       references: {
-        model: "Category",
+        model: "Categories",
         key: "id",
       },
     },
@@ -23,6 +23,6 @@ const Category = sequelize.define(
   {}
 );
 
-Category.belongsTo(Category, { foreignKey: "parent" });
+Category.belongsTo(Category, { foreignKey: "parentId", as: "parentCategory" });
 
 module.exports = Category;

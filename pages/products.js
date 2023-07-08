@@ -27,7 +27,7 @@ export async function getServerSideProps(ctx) {
     ? await WishedProduct.findAll({
         where: {
           userEmail: session?.user.email,
-          product: products.map((p) => p.id.toString()),
+          productId: products.map((p) => p.id.toString()),
         },
       })
     : [];

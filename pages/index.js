@@ -1,4 +1,4 @@
-import Header from "@components/Header";
+import Header from "@/components/Header";
 import Featured from "@/components/Featured";
 import Product from "@/models/Product";
 import NewProducts from "@/components/NewProducts";
@@ -25,8 +25,20 @@ export async function getServerSideProps(ctx) {
   const featuredProductSetting = await Setting.findOne({
     where: { name: "featuredProductId" },
   });
-  const featuredProductId = featuredProductSetting.value;
-  const featuredProduct = await Product.findByPk(featuredProductId);
+
+  if (!featuredProductSetting) {
+    console.error("Featured product setting not found");
+    return { props: {}}
+  }
+
+  const featuredProductTitle = featuredProductSetting.value;
+  const featuredProduct = await Product.findOne({ where: { title: featuredProductTitle } });
+
+  if (!featuredProduct) {
+    console.error(`No product with id ${featuredProductTitle} found`);
+    return { props: {}}
+  }
+
   const newProducts = await Product.findAll({
     order: [["id", "DESC"]],
     limit: 10,

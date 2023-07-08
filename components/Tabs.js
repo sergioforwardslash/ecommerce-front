@@ -22,8 +22,9 @@ const StyledTab = styled.span`
 export default function Tabs({ tabs, active, onChange }) {
   return (
     <StyledTabs>
-      {tabs.map((tabName) => (
+      {tabs.map((tabName, index) => (
         <StyledTab
+          key={index}
           onClick={() => {
             onChange(tabName);
           }}

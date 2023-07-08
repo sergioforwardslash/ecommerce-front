@@ -3,6 +3,7 @@ import { Op } from "sequelize";
 
 export default async function handle(req, res) {
   const { categories, sort, phrase, ...filters } = req.query;
+  console.log(req.query);
   let [sortField, sortOrder] = (sort || "id-desc").split("-");
 
   const productsQuery = {};

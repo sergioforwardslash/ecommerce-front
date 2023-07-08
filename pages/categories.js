@@ -9,7 +9,6 @@ import { RevealWrapper } from "next-reveal";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import WishedProduct from "@/models/WishedProduct";
-import sequelize from "@/lib/sequelize";
 
 // Styles
 const CategoryGrid = styled.div`
@@ -51,19 +50,19 @@ export default function CategoriesPage({
       <Header />
       <Center>
         {mainCategories.map((cat) => (
-          <CategoryWrapper key={cat._id}>
+          <CategoryWrapper key={cat.id}>
             <CategoryTitle>
               <h2>{cat.name}</h2>
-              <Link href={"/category/" + cat._id}>Show all</Link>
+              <Link href={"/category/" + cat.id}>Show all</Link>
             </CategoryTitle>
             <CategoryGrid>
-              {categoriesProducts[cat._id].map((p, index) => (
-                <RevealWrapper key={p._id} delay={index * 50}>
-                  <ProductBox {...p} wished={wishedProducts.includes(p._id)} />
+              {categoriesProducts[cat.id].map((p, index) => (
+                <RevealWrapper key={p.id} delay={index * 50}>
+                  <ProductBox {...p} wished={wishedProducts.includes(p.id)} />
                 </RevealWrapper>
               ))}
-              <RevealWrapper delay={categoriesProducts[cat._id].length * 50}>
-                <ShowAllSquare href={"/category/" + cat._id}>
+              <RevealWrapper delay={categoriesProducts[cat.id].length * 50}>
+                <ShowAllSquare href={"/category/" + cat.id}>
                   Show all &rarr;
                 </ShowAllSquare>
               </RevealWrapper>
@@ -100,7 +99,7 @@ export async function getServerSideProps(ctx) {
 
     // Fetch products of these categories (limited to 3, sorted by ID in descending order)
     const products = await Product.findAll({
-      where: { category: categoriesIds },
+      where: { categoryId: categoriesIds },
       limit: 3,
       order: [["id", "DESC"]],
     });
@@ -118,7 +117,7 @@ export async function getServerSideProps(ctx) {
     ? await WishedProduct.findAll({
         where: {
           userEmail: session?.user.email,
-          product: allFetchedProductsId,
+          productId: allFetchedProductsId,
         },
       })
     : [];

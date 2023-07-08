@@ -8,7 +8,7 @@ export default async function handle(req, res) {
       title,
       description,
       stars,
-      productId: product,
+      product,
     });
     res.json(review);
   }
@@ -16,7 +16,7 @@ export default async function handle(req, res) {
   if (req.method === "GET") {
     const { product } = req.query;
     const reviews = await Review.findAll({
-      where: { productId: product },
+      where: { product },
       order: [["createdAt", "DESC"]],
     });
     res.json(reviews);

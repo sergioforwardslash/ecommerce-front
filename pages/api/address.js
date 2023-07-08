@@ -1,19 +1,20 @@
-import { getSession } from "next-auth/client";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import Address from "@/models/Address";
 
 export default async function handle(req, res) {
-  const session = await getSession({ req });
+  const { user } = await getServerSession( req, res, authOptions );
 
   if (req.method === "PUT") {
     let address = await Address.findOne({
-      where: { userEmail: session.user.email },
+      where: { userEmail: user.email },
     });
 
     if (address) {
       address = await address.update({ ...req.body });
     } else {
       address = await Address.create({
-        userEmail: session.user.email,
+        userEmail: user.email,
         ...req.body,
       });
     }
@@ -23,7 +24,7 @@ export default async function handle(req, res) {
 
   if (req.method === "GET") {
     const address = await Address.findOne({
-      where: { userEmail: session.user.email },
+      where: { userEmail: user.email },
     });
     res.json(address);
   }

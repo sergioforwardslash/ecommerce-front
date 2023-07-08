@@ -52,15 +52,14 @@ export default function StarsRating({
   return (
     <StarsWrapper>
       {five.map((n) => (
-        <>
-          <StarWrapper
-            disabled={disabled}
-            size={size}
-            onClick={() => handleStarClick(n)}
-          >
-            {howMany >= n ? <StarSolid /> : <StarOutline />}
-          </StarWrapper>
-        </>
+        <StarWrapper
+          key={n}
+          disabled={disabled}
+          size={size}
+          onClick={() => handleStarClick(n)}
+        >
+          {howMany >= n ? <StarSolid /> : <StarOutline />}
+        </StarWrapper>
       ))}
     </StarsWrapper>
   );

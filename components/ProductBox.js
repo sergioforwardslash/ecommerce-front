@@ -1,10 +1,6 @@
 import styled from "styled-components";
-import Button, { ButtonStyle } from "@/components/Button";
-import CartIcon from "@/components/icons/CartIcon";
 import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
-import { CartContext } from "@/components/CartContext";
-import { primary } from "@/lib/colors";
+import { useState } from "react";
 import FlyingButton from "@/components/FlyingButton";
 import HeartOutlineIcon from "@/components/icons/HeartOutlineIcon";
 import HeartSolidIcon from "@/components/icons/HeartSolidIcon";
@@ -30,7 +26,7 @@ const WhiteBox = styled(Link)`
   position: relative;
   img {
     max-width: 100%;
-    max-height: 80px;
+    max-height: 120px;
   }
 `;
 

@@ -42,6 +42,7 @@ export default function AccountPage() {
   const [city, setCity] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
+  const [state, setState] = useState("");
   const [country, setCountry] = useState("");
   const [addressLoaded, setAddressLoaded] = useState(true);
   const [wishlistLoaded, setWishlistLoaded] = useState(true);
@@ -59,7 +60,15 @@ export default function AccountPage() {
     await signIn("google");
   }
   function saveAddress() {
-    const data = { name, email, city, streetAddress, postalCode, country };
+    const data = {
+      name,
+      email,
+      city,
+      streetAddress,
+      postalCode,
+      state,
+      country,
+    };
     axios.put("/api/address", data);
   }
   useEffect(() => {
@@ -69,23 +78,41 @@ export default function AccountPage() {
     setAddressLoaded(false);
     setWishlistLoaded(false);
     setOrderLoaded(false);
-    axios.get("/api/address").then((response) => {
-      setName(response.data.name);
-      setEmail(response.data.email);
-      setCity(response.data.city);
-      setPostalCode(response.data.postalCode);
-      setStreetAddress(response.data.streetAddress);
-      setCountry(response.data.country);
-      setAddressLoaded(true);
-    });
-    axios.get("/api/wishlist").then((response) => {
-      setWishedProducts(response.data.map((wp) => wp.product));
-      setWishlistLoaded(true);
-    });
-    axios.get("/api/orders").then((response) => {
-      setOrders(response.data);
-      setOrderLoaded(true);
-    });
+    axios
+      .get("/api/address")
+      .then((response) => {
+        if (response.data) {
+          setName(response.data.name || "");
+          setEmail(response.data.email || "");
+          setCity(response.data.city || "");
+          setPostalCode(response.data.postalCode || "");
+          setStreetAddress(response.data.streetAddress || "");
+          setState(response.data.state || "");
+          setCountry(response.data.country || "");
+        }
+        setAddressLoaded(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching address", error);
+      });
+    axios
+      .get("/api/wishlist")
+      .then((response) => {
+        setWishedProducts(response.data.map((wp) => wp.product));
+        setWishlistLoaded(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching wishlist", error);
+      });
+    axios
+      .get("/api/orders")
+      .then((response) => {
+        setOrders(response.data);
+        setOrderLoaded(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching orders", error);
+      });
   }, [session]);
   function productRemovedFromWishlist(idToRemove) {
     setWishedProducts((products) => {
@@ -110,7 +137,12 @@ export default function AccountPage() {
                     {!orderLoaded && <Spinner fullWidth={true} />}
                     {orderLoaded && (
                       <div>
-                        {orders.length === 0 && <p>Login to see your orders</p>}
+                        {orders.length === 0 && (
+                          <>
+                            {session && <p>Your orders are empty</p>}
+                            {!session && <p>Login to view your orders</p>}
+                          </>
+                        )}
                         {orders.length > 0 &&
                           orders.map((o) => <SingleOrder {...o} />)}
                       </div>
@@ -193,6 +225,13 @@ export default function AccountPage() {
                       value={streetAddress}
                       name="streetAddress"
                       onChange={(ev) => setStreetAddress(ev.target.value)}
+                    />
+                    <Input
+                      type="text"
+                      placeholder="State"
+                      value={state}
+                      name="state"
+                      onChange={(ev) => setState(ev.target.value)}
                     />
                     <Input
                       type="text"

@@ -22,4 +22,4 @@ const WishedProduct = sequelize.define('WishedProduct', {
 Product.hasMany(WishedProduct, { foreignKey: 'productId' });
 WishedProduct.belongsTo(Product, { foreignKey: 'productId' });
 
-export default WishedProduct;
+module.exports = WishedProduct;

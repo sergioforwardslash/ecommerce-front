@@ -14,6 +14,7 @@ const Address = sequelize.define(
     city: DataTypes.STRING,
     postalCode: DataTypes.STRING,
     streetAddress: DataTypes.STRING,
+    state: DataTypes.STRING,
     country: DataTypes.STRING,
   },
   {

@@ -12,6 +12,7 @@ export default function HomePage({
   newProducts,
   wishedNewProducts,
 }) {
+  console.log(featuredProduct);
   return (
     <div>
       <Header />
@@ -31,11 +32,11 @@ export async function getServerSideProps(ctx) {
     return { props: {}}
   }
 
-  const featuredProductTitle = featuredProductSetting.value;
-  const featuredProduct = await Product.findOne({ where: { title: featuredProductTitle } });
+  const featuredProductId = featuredProductSetting.value;
+  const featuredProduct = await Product.findOne({ where: { id: featuredProductId } });
 
   if (!featuredProduct) {
-    console.error(`No product with id ${featuredProductTitle} found`);
+    console.error(`No product with id ${featuredProductId} found`);
     return { props: {}}
   }
 

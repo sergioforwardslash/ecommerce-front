@@ -56,11 +56,13 @@ export async function getServerSideProps(ctx) {
       })
     : [];
 
+    console.log(wishedNewProducts);
+
   return {
     props: {
       featuredProduct: JSON.parse(JSON.stringify(featuredProduct)),
       newProducts: JSON.parse(JSON.stringify(newProducts)),
-      wishedNewProducts: wishedNewProducts.map((i) => i.product.toString()),
+      wishedNewProducts: wishedNewProducts.map((i) => i.productId.toString()),
     },
   };
 }

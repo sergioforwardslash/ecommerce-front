@@ -34,7 +34,7 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       products: JSON.parse(JSON.stringify(products)),
-      wishedProducts: wishedProducts.map((i) => i.product.toString()),
+      wishedProducts: wishedProducts.map((i) => i.productId.toString()),
     },
   };
 }

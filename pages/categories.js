@@ -126,7 +126,7 @@ export async function getServerSideProps(ctx) {
     props: {
       mainCategories: JSON.parse(JSON.stringify(mainCategories)),
       categoriesProducts: JSON.parse(JSON.stringify(categoriesProducts)),
-      wishedProducts: wishedProducts.map((i) => i.product.toString()),
+      wishedProducts: wishedProducts.map((i) => i.productId.toString()),
     },
   };
 }

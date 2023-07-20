@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Featured from "@/components/Featured";
 import Product from "@/models/Product";
+import Services from "@/components/Services";
 import NewProducts from "@/components/NewProducts";
 import WishedProduct from "@/models/WishedProduct";
 import { getServerSession } from "next-auth";
@@ -18,6 +19,7 @@ export default function HomePage({
       <Header />
       <Featured product={featuredProduct} />
       <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
+      <Services />
     </div>
   );
 }
